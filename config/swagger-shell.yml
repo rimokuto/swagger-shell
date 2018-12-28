@@ -1,0 +1,7 @@
+api:
+  ignore_top_url: /
+pry:
+  prompt_name: swagger-shell
+  home: ~/.swagger-shell/
+  history_file: history
+  users_file: users

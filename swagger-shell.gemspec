@@ -7,11 +7,12 @@ Gem::Specification.new do |spec|
   spec.name          = "swagger-shell"
   spec.version       = Swagger::Shell::VERSION
   spec.authors       = ["Junya Tokumori"]
-  spec.email         = ["j-tokumori@bns-g.com"]
+  spec.email         = ["rimokuto@gmail.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = "swagger-shell"
+  spec.description   = "shell cli for swagger"
+  spec.homepage      = "https://github.com/rimokuto/swagger-shell"
+  spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
@@ -31,7 +32,12 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 1.16"
+  spec.add_dependency "faraday", "~> 0.10" # TODO: net/http
+  spec.add_dependency "parallel", "~> 1.12"
+  spec.add_dependency "pry", "~> 0.11"
+  spec.add_dependency "rb-readline", "~> 0.5" # TODO: if possible to delete
+
+  # spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
 end

@@ -7,5 +7,10 @@
 /spec/reports/
 /tmp/
 
+# Ignore bundler gems.
+vendor/bundle
+
 # rspec failure tracking
 .rspec_status
+
+/.idea/
