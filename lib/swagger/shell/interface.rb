@@ -44,15 +44,15 @@ module Swagger
 
       # output API list
       #
-      # option # TODO: implement
+      # option
       # p: output parameter name
       # s: output summary
       #
       # no option output summary.
       #
       # e.g.:
-      # swagger-shell(main)> apis :p
-      def apis(option = "")
+      # swagger-shell(main)> apis :ps
+      def apis(option = :ps)
         option = option.to_s
 
         with_parameter = option.include?("p")
@@ -61,11 +61,13 @@ module Swagger
         api_list = api.api_list
         max_key_size = api_list.keys.map(&:size).max
         api_list.sort.each do |api, operation|
-          output = "#{api}#{" " * (max_key_size - api.size)}"
-          output += " # #{(operation["parameters"] || []).map {|p| p["name"][8..-2] }.join(" ")}" if with_parameter
-          output += " # #{operation["summary"]}" if with_summary
-          puts output
+          comments = []
+          comments << operation.summary if with_summary
+          comments << "(#{(operation.parameters || []).map {|p| p["name"][8..-2] }.map {|n| "#{n}:" }.join(", ")})" if with_parameter
+
+          puts "#{api}#{" " * (max_key_size - api.size)} # #{comments.join(" ")}"
         end
+
         nil
       end
     end

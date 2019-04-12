@@ -1,24 +1,28 @@
 module Swagger
   module Shell
     module ApiGet
+      attr_accessor :get_api_info
       def get(message = {})
         _get(api_url, message)
       end
     end
 
     module ApiPost
+      attr_accessor :post_api_info
       def post(message = {})
         _post(api_url, message)
       end
     end
 
     module ApiPut
+      attr_accessor :put_api_info
       def put(message = {})
         _put(api_url, message)
       end
     end
 
     module ApiDelete
+      attr_accessor :delete_api_info
       def delete(message = {})
         _delete(api_url, message)
       end
@@ -45,9 +49,9 @@ module Swagger
         root? ? "api" : @key
       end
 
-      def add_api(path_keys, method, api_info: nil)
+      def add_api(path_keys, method, api_info = nil)
         find_or_create_api_struct(path_keys).tap do |api_struct|
-          api_struct.add_api_module(method) if api_struct
+          api_struct.add_api_module(method, api_info) if api_struct
         end
       end
 
@@ -55,8 +59,8 @@ module Swagger
         @children.each_with_object({}) do |key, hash|
           hash.merge!(instance_variable_get("@#{key}").api_list)
         end.tap do |hash|
-          api_methods.each do |api_method|
-            hash[api_method] = ""
+          api_methods.each do |method|
+            hash[(api_ancestors.map(&:method_key) << method).join(".")] = send("#{method}_api_info")
           end
         end
       end
@@ -68,7 +72,8 @@ module Swagger
 
       def api_methods
         %i[get post put delete].map do |method|
-          (api_ancestors.map(&:method_key) << method).join(".") if singleton_class.include? self.class.module_class(method)
+          # (api_ancestors.map(&:method_key) << method).join(".") if singleton_class.include? self.class.module_class(method)
+          method if singleton_class.include? self.class.module_class(method)
         end.compact
       end
 
@@ -80,8 +85,9 @@ module Swagger
         end.reverse
       end
 
-      def add_api_module(method)
+      def add_api_module(method, api_info)
         extend self.class.module_class(method)
+        send("#{method}_api_info=", api_info)
       end
 
       def child(path_key)
