@@ -6,10 +6,10 @@ module Swagger
       def load_sample
         id = list.sample
         return if id.nil?
-        load_by(id)
+        load(id)
       end
 
-      def load_by(id)
+      def load(id)
         @id = id
         @info = YAML.load_file("#{users_path}/#{Swagger::Shell.env}.#{@id}.yml")
       end
