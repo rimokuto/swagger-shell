@@ -16,7 +16,15 @@ module Swagger
                 path = api2["path"].gsub(/^#{Swagger::Shell.config_api.ignore_top_url}/, "")
                 path_keys = path.split("/").reject {|s| s == "" }.tap {|p| p.last.gsub!(".json", "") }
 
-                root_api.add_api(path_keys, api2["operations"].first["method"])
+                info = api2["operations"].first
+                api_info = OpenStruct.new(
+                  summary: info["summary"],
+                  notes: info["notes"],
+                  parameters: info["parameters"],
+                  response_messages: info["responseMessages"],
+                  nickname: info["nickname"],
+                )
+                root_api.add_api(path_keys, info["method"], api_info)
               end
             end
           elsif swagger_version == "2.0"
@@ -24,7 +32,7 @@ module Swagger
               methods.each do |method, api_info|
                 # TODO: ignore path
                 path_keys = path.split("/").reject {|s| s == "" } # TODO: format // .tap {|p| p.last.gsub!(".json", "") }
-                root_api.add_api(path_keys, method, api_info: api_info)
+                root_api.add_api(path_keys, method) # TODO: api_info
               end
             end
           end

@@ -8,29 +8,28 @@ require "json"
 module Swagger
   module Shell
     class << self
+      attr_reader :env, :config_api, :config_pry
+
       def env=(env)
         @env = env
       end
 
-      def env
-        @env
+      def config_env=(config)
+        @config_env_store = hash_to_struct(config)
       end
 
       def config_env
-        @config_env ||= hash_to_struct(YAML.load_file("config/env.yml")[env.to_s]).tap do |config|  # TODO: pass outside
-          raise "not exist env: #{env}" if config.nil?
+        @config_env ||= @config_env_store[env].tap do |config|
           config.docs_url = File.join(config.api_url, config.docs_url) unless config.docs_url.start_with? "http"
         end
       end
 
-      def config_api
-        @config_api ||= hash_to_struct(YAML.load_file("config/swagger-shell.yml")["api"]).tap do |_config|  # TODO: pass outside
-          # noting to do
-        end
+      def config_api=(config)
+        @config_api = hash_to_struct(config)
       end
 
-      def config_pry
-        @config_local ||= hash_to_struct(YAML.load_file("config/swagger-shell.yml")["pry"]).tap do |config| # TODO: pass outside
+      def config_pry=(config)
+        @config_pry = hash_to_struct(config).tap do |config|
           config.home = config.home.gsub(/^~/, Dir.home) if config.home.start_with?("~/")
           config.history_path = File.join(config.home, config.history_file)
           config.users_path = File.join(config.home, config.users_file)
