@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    swagger-shell (0.0.2)
+    swagger-shell (0.0.3)
       faraday (~> 0.10)
       parallel (~> 1.12)
       pry (~> 0.11)
