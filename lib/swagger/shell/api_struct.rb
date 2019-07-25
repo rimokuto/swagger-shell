@@ -132,6 +132,8 @@ module Swagger
         JSON.parse body, symbolize_names: true
       end
 
+      def hook_response_header(header); end
+
       def find_or_create_api_struct(path_keys)
         path_keys.inject(self) do |api_struct, path_key|
           break nil if api_struct.nil?
@@ -170,6 +172,7 @@ module Swagger
           raise e
         end
 
+        hook_response_header(res.env.response_headers)
         hook_response_body(res.body)
       end
     end
